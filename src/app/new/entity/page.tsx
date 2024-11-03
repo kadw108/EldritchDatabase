@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import EntityService from "../../services/entityService";
+import DataService from "../../services/dataService";
 
 // https://www.formbackend.com/nextjs-form
 export default function NewEntityForm() {
@@ -25,7 +25,7 @@ export default function NewEntityForm() {
     const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        await EntityService.createNew(formData).then((res) => {
+        await DataService.createNew(formData, DataService.DataType.ENTITY).then((res) => {
             if (res.success) {
                 alert("Review successfully posted!");
             }

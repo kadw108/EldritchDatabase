@@ -1,6 +1,8 @@
 import Image from "next/image";
 
 import AllResearchers from "./browse/allResearchers";
+import AllEntities from "./browse/allEntities";
+import AllArtifacts from "./browse/allArtifacts";
 
 export default function Home() {
   return (
@@ -17,6 +19,8 @@ export default function Home() {
     <hr/>
 
     <AllResearchers/>
+    <AllEntities/>
+    <AllArtifacts/>
 
     </main>
   );

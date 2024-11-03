@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import ResearcherService from "../../services/researcherService";
+import ResearcherService from "../../services/dataService";
 
 export default function NewExperienceForm() {
     const handleInput = (e: React.FormEvent<HTMLInputElement> | React.FormEvent<HTMLTextAreaElement>) => {

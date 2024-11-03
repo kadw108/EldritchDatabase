@@ -1,12 +1,23 @@
-const url = "http://localhost:8888/api/researcher";
+const SERVER_URL = "http://localhost:8888/api";
 
-class ResearcherService {
-    static async createNew(data) {
+class DataService {
+    /**
+     * Enum for endpoints.
+     * @readonly
+     * @enum {{name: string, hex: string}}
+     */
+    static DataType = Object.freeze({
+        RESEARCHER:   { string: "researcher"},
+        ARTIFACT:  { string: "artifact"},
+        ENTITY: { string: "entity"}
+    });
+  
+    static async createNew(data, endpoint) {
         console.log("Creation of researcher.");
         console.log(JSON.stringify(data));
 
         return new Promise((resolve, reject) => {
-            fetch(`${url}/new`, {
+            fetch(`${SERVER_URL}/${endpoint.string}/new`, {
                 method: "post",
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify(data),
@@ -21,10 +32,10 @@ class ResearcherService {
         });
     }
 
-    // getting researchers from database (implement limit?)
-    static async getAll() {
+    // getting all from database (implement limit?)
+    static async getAll(endpoint) {
         return new Promise((resolve, reject) => {
-            fetch(`${url}/get_all`, {
+            fetch(`${SERVER_URL}/${endpoint.string}/get_all`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
             })
@@ -40,4 +51,4 @@ class ResearcherService {
     }
 }
 
-export default ResearcherService;
+export default DataService;

@@ -15,7 +15,7 @@ export default function AllResearchers() {
     React.useEffect(() => {
         async function getData() {
             // load items from database
-            const serviceInfo = await DataService.getAll(DataService.DataType.RESEARCHER);
+            const serviceInfo = await DataService.getAll(DataService.DataType.ENTITY);
             setAllResults(serviceInfo.data);
             setIsLoading(false);
         }
@@ -40,7 +40,7 @@ export default function AllResearchers() {
 
     return (
         <div className={styles.sectionContainer}>
-            <h2>Researchers</h2>
+            <h2>Entities</h2>
             {content}
         </div>
     );

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import ResearcherService from "../../services/researcherService";
+import DataService from "../../services/dataService";
 
 // https://www.formbackend.com/nextjs-form
 export default function NewResearcherForm() {
@@ -25,7 +25,7 @@ export default function NewResearcherForm() {
     const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        await ResearcherService.createNew(formData).then((res) => {
+        await DataService.createNew(formData, DataService.DataType.RESEARCHER).then((res) => {
             if (res.success) {
                 alert("Review successfully posted!");
             }

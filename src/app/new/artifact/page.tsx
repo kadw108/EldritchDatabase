@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import ArtifactService from "../../services/artifactService";
+import DataService from "../../services/dataService";
 
 // https://www.formbackend.com/nextjs-form
 export default function NewArtifactForm() {
@@ -25,7 +25,7 @@ export default function NewArtifactForm() {
     const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        await ArtifactService.createNew(formData).then((res) => {
+        await DataService.createNew(formData, DataService.DataType.ARTIFACT).then((res) => {
             if (res.success) {
                 alert("Review successfully posted!");
             }

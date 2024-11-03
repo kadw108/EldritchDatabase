@@ -25,4 +25,15 @@ router.post("/new", async (req, res) => {
     }
 });
 
+router.get("/get_all", async (req, res) => {
+    try {
+        // find all
+        const allResults = await ArtifactModel.find({});
+
+        res.status(201).json({ success: true, data: allResults });
+    } catch (err) {
+        res.status(422).json({ success: false, data: err.message });
+    }
+});
+
 module.exports = {router};
