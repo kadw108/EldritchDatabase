@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import DataService from "../../services/dataService";
+import Category from "@/app/category";
 
 // https://www.formbackend.com/nextjs-form
 export default function NewResearcherForm() {
@@ -25,10 +26,11 @@ export default function NewResearcherForm() {
     const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        await DataService.createNew(formData, DataService.DataType.RESEARCHER).then((res) => {
+        await DataService.createNew(formData, Category.RESEARCHER).then((res) => {
             if (res.success) {
                 alert("Successfully posted!");
                 setFormData(blankFormData);
+                document.querySelectorAll('input[type="radio"]').forEach((i) => (i as HTMLInputElement).checked = false);
             }
             else {
                 alert("Sorry, an error occured.");
@@ -43,7 +45,7 @@ export default function NewResearcherForm() {
                 <div>
                     <label>Name</label>
                     <br />
-                    <input type="text" name="name" onChange={handleInput} />
+                    <input type="text" name="name" onChange={handleInput} value={formData.name}/>
                 </div>
 
                 <div>
@@ -56,7 +58,7 @@ export default function NewResearcherForm() {
                 <div>
                     <label>Description</label>
                     <br />
-                    <textarea name="description" onChange={handleInput}></textarea>
+                    <textarea name="description" onChange={handleInput} value={formData.description}></textarea>
                 </div>
 
                 <button type="submit">Create New Researcher</button>

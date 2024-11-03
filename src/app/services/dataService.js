@@ -1,23 +1,12 @@
 const SERVER_URL = "http://localhost:8888/api";
 
 class DataService {
-    /**
-     * Enum for endpoints.
-     * @readonly
-     * @enum {{name: string, hex: string}}
-     */
-    static DataType = Object.freeze({
-        RESEARCHER:   { string: "researcher"},
-        ARTIFACT:  { string: "artifact"},
-        ENTITY: { string: "entity"}
-    });
-  
-    static async createNew(data, endpoint) {
-        console.log("Creation of researcher.");
+    static async createNew(data, category) {
+        console.log("Creation of object.");
         console.log(JSON.stringify(data));
 
         return new Promise((resolve, reject) => {
-            fetch(`${SERVER_URL}/${endpoint.string}/new`, {
+            fetch(`${SERVER_URL}/${category.string}/new`, {
                 method: "post",
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify(data),
@@ -33,9 +22,26 @@ class DataService {
     }
 
     // getting all from database (implement limit?)
-    static async getAll(endpoint) {
+    static async getAll(category) {
         return new Promise((resolve, reject) => {
-            fetch(`${SERVER_URL}/${endpoint.string}/get_all`, {
+            fetch(`${SERVER_URL}/${category.string}/get_all`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+            })
+                .then((res) => res.json())
+                .then((res) => {
+                    // const data = res.data;
+                    resolve(res);
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
+    }
+
+    static async getOne(category, id) {
+        return new Promise((resolve, reject) => {
+            fetch(`${SERVER_URL}/${category.string}/get/${id}`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
             })

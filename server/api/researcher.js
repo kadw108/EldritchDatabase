@@ -28,16 +28,16 @@ router.get("/get_all", async (req, res) => {
 
         res.status(201).json({ success: true, data: allResults });
     } catch (err) {
-        res.status(422).json({ success: false, data: err.message });
+        res.status(400).json({ success: false, data: err.message });
     }
 });
 
 router.post("/get/:id", async (req, res) => {
     try {
-        res.status(201).json({ success: true, data: "Successfully added researcher." });
+        const result = ResearcherModel.findById(req.params.id);
+        res.status(201).json({ success: true, data: result });
     } catch (err) {
-        // console.log(err.message);
-        res.status(422).json({ success: false, data: err.message });
+        res.status(400).json({ success: false, data: err.message });
     }
 });
 

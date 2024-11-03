@@ -10,6 +10,7 @@ router.post("/new", async (req, res) => {
         // Get the incoming data in the Mongoose-defined schema format.
         const newObject = new EntityModel({
             name: req.body.name,
+            origin: req.body.origin,
             description: req.body.description,
             creation_datetime: new Date(Date.now()),
         });
@@ -31,7 +32,7 @@ router.get("/get_all", async (req, res) => {
 
         res.status(201).json({ success: true, data: allResults });
     } catch (err) {
-        res.status(422).json({ success: false, data: err.message });
+        res.status(400).json({ success: false, data: err.message });
     }
 });
 

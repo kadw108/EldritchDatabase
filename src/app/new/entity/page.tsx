@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import DataService from "../../services/dataService";
+import Category from "@/app/category";
 
 // https://www.formbackend.com/nextjs-form
 export default function NewEntityForm() {
@@ -25,10 +26,11 @@ export default function NewEntityForm() {
     const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        await DataService.createNew(formData, DataService.DataType.ENTITY).then((res) => {
+        await DataService.createNew(formData, Category.ENTITY).then((res) => {
             if (res.success) {
                 alert("Successfully posted!");
                 setFormData(blankFormData);
+                document.querySelectorAll('input[type="radio"]').forEach((i) => (i as HTMLInputElement).checked = false);
             }
             else {
                 alert("Sorry, an error occured.");
@@ -43,20 +45,20 @@ export default function NewEntityForm() {
                 <div>
                     <label>Name</label>
                     <br />
-                    <input type="text" name="name" onChange={handleInput} />
+                    <input type="text" name="name" onChange={handleInput} value={formData.name}/>
                 </div>
 
                 <div>
                     <p>Origin</p>
                     <br />
-                    <input type="radio" id="planar" name="nature" value="Planar" onChange={handleInput} /> <label htmlFor="planar">Planar</label><br />
-                    <input type="radio" id="extraplanar" name="nature" value="Extraplanar" onChange={handleInput} /> <label htmlFor="extraplanar">Extraplanar</label><br />
+                    <input type="radio" id="planar" name="origin" value="Planar" onChange={handleInput} /> <label htmlFor="planar">Planar</label><br />
+                    <input type="radio" id="extraplanar" name="origin" value="Extraplanar" onChange={handleInput} /> <label htmlFor="extraplanar">Extraplanar</label><br />
                 </div>
 
                 <div>
                     <label>Description</label>
                     <br />
-                    <textarea name="description" onChange={handleInput}></textarea>
+                    <textarea name="description" onChange={handleInput} value={formData.description}></textarea>
                 </div>
 
                 <button type="submit">Create New Entity</button>

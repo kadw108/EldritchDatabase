@@ -15,6 +15,9 @@ form textarea {
     width: 100%;
     min-height: 60px;
 }
+form input[type="text"] {
+    width: 50%;
+}
 
 a:not(.unstyled) {
     color: #0f0;
@@ -27,4 +30,14 @@ body {
 
 hr {
     margin: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+button {
+    background-color: #000;
+    color: #fff;
+    cursor: pointer;
 }

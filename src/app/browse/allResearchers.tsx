@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import DataService from "../services/dataService";
+import Category from "../category";
 
 import DataDiv from "./dataDiv";
 import Loading from "./loading";
@@ -15,7 +16,7 @@ export default function AllResearchers() {
     React.useEffect(() => {
         async function getData() {
             // load items from database
-            const serviceInfo = await DataService.getAll(DataService.DataType.RESEARCHER);
+            const serviceInfo = await DataService.getAll(Category.RESEARCHER);
             setAllResults(serviceInfo.data);
             setIsLoading(false);
         }
@@ -25,7 +26,7 @@ export default function AllResearchers() {
     let content = 
         <div>
             {allResults.map((info: any) => (
-                <DataDiv key={info._id} data={info} />
+                <DataDiv key={info._id} data={info} category={Category.RESEARCHER}/>
             ))}
         </div>;
     if (allResults.length == 0) {
