@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import ResearcherService from "../services/researcherService";
+import ArtifactService from "../../services/artifactService";
 
 // https://www.formbackend.com/nextjs-form
-export default function NewResearcherForm() {
+export default function NewArtifactForm() {
     const handleInput = (e: React.FormEvent<HTMLInputElement> | React.FormEvent<HTMLTextAreaElement>) => {
         const fieldName = e.currentTarget.name;
         const fieldValue = e.currentTarget.value;
@@ -25,7 +25,7 @@ export default function NewResearcherForm() {
     const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        await ResearcherService.createNew(formData).then((res) => {
+        await ArtifactService.createNew(formData).then((res) => {
             if (res.success) {
                 alert("Review successfully posted!");
             }
@@ -37,7 +37,7 @@ export default function NewResearcherForm() {
 
     return (
         <div>
-            <h2>Create New Researcher</h2>
+            <h2>Create New Artifact</h2>
             <form method="POST" action="" onSubmit={submitForm}>
                 <div>
                     <label>Name</label>
@@ -46,10 +46,10 @@ export default function NewResearcherForm() {
                 </div>
 
                 <div>
-                    <p>Category</p>
+                    <p>Origin</p>
                     <br />
-                    <input type="radio" id="human" name="category" value="Human" onChange={handleInput} /> <label htmlFor="human">Human</label><br />
-                    <input type="radio" id="manufactured" name="category" value="Manufactured" onChange={handleInput} /> <label htmlFor="manufactured">Manufactured</label><br />
+                    <input type="radio" id="planar" name="category" value="Planar" onChange={handleInput} /> <label htmlFor="planar">Planar</label><br />
+                    <input type="radio" id="extraplanar" name="category" value="Extraplanar" onChange={handleInput} /> <label htmlFor="extraplanar">Extraplanar</label><br />
                 </div>
 
                 <div>
@@ -58,7 +58,7 @@ export default function NewResearcherForm() {
                     <textarea name="description" onChange={handleInput}></textarea>
                 </div>
 
-                <button type="submit">Create New Researcher</button>
+                <button type="submit">Create New Artifact</button>
             </form>
         </div>
     );

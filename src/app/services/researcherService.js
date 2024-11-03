@@ -20,6 +20,24 @@ class ResearcherService {
                 });
         });
     }
+
+    // getting researchers from database (implement limit?)
+    static async getAll() {
+        return new Promise((resolve, reject) => {
+            fetch(`${url}/get_all`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+            })
+                .then((res) => res.json())
+                .then((res) => {
+                    // const data = res.data;
+                    resolve(res);
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
+    }
 }
 
 export default ResearcherService;

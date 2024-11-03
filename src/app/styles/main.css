@@ -24,3 +24,7 @@ a:not(.unstyled) {
 body {
     font-family: var(--font-mono) !important;
 }
+
+hr {
+    margin: 20px;
+}
