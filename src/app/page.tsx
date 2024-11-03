@@ -4,13 +4,10 @@ export default function Home() {
   return (
     <main>
 
-    <h1>Eldritch Experience Database</h1>
+    <p>A database of eldritch artifacts and encounters. The eldritch researcher's #1 resource!</p>
     <br/>
 
-    <p>A database of eldritch artifacts and encounters. The cultist's #1 resource!</p>
-    <br/>
-
-    <h3>WELCOME, SCHOLAR.</h3>
+    <a href="/new_researcher">Add Researcher Listing</a>
 
     </main>
   );

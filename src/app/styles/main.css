@@ -1,0 +1,26 @@
+#mainContainer {
+    max-width: 100ch;
+    padding: 1em 1em 1em 1em;
+    margin: 0 auto;
+}
+
+#header {
+    margin-bottom: 20px;
+}
+
+form div {
+    margin: 20px;
+}
+form textarea {
+    width: 100%;
+    min-height: 60px;
+}
+
+a:not(.unstyled) {
+    color: #0f0;
+    text-decoration: underline;
+}
+
+body {
+    font-family: var(--font-mono) !important;
+}
