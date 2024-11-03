@@ -14,8 +14,11 @@ app.use(express.urlencoded({ extended: false, limit: "50mb" })); // parse form d
 app.use(express.json({ limit: "50mb" })); // needed to parse json in requests
 
 // API routes
-const researcher = require("./researcher").router;
+const researcher = require("./api/researcher").router;
 app.use("/api/researcher", researcher);
+
+app.use("/api/entity", require("./api/entity").router);
+app.use("/api/artifact", require("./api/artifact").router);
 
 app.listen(PORT, () => {
     console.log("Server running on port " + PORT + ".");

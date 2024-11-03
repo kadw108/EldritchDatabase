@@ -1,23 +1,22 @@
 const express = require("express");
 const router = express.Router();
-const { ResearcherModel } = require("./model/schema");
+const { EntityModel } = require("../model/schema");
 
-//create new review
+//create new
 router.post("/new", async (req, res) => {
     try {
         console.log("REQ: " + req.body);
 
         // Get the incoming data in the Mongoose-defined schema format.
-        const newObject = new ResearcherModel({
+        const newObject = new EntityModel({
             name: req.body.name,
-            category: req.body.category,
             description: req.body.description,
             creation_datetime: new Date(Date.now()),
         });
         console.log("NEW OBJECT: " + newObject);
         await newObject.save();
 
-        res.status(201).json({ success: true, data: "Successfully added researcher." });
+        res.status(201).json({ success: true, data: "Successfully added entity." });
 
     } catch (err) {
         // console.log(err.message);
