@@ -1,5 +1,4 @@
 const express = require("express");
-const { db, mongo } = require("./mongo"); // for mongoDB
 // const cors = require("cors");
 // const http = require("http");
 
@@ -11,8 +10,8 @@ const PORT = 8888;
 
 /*
 app.use(express.urlencoded({ extended: false, limit: "50mb" })); // parse form data
-app.use(express.json({ limit: "50mb" })); // parse json
 */
+app.use(express.json({ limit: "50mb" })); // needed to parse json in requests
 
 // API routes
 const researcher = require("./researcher").router;

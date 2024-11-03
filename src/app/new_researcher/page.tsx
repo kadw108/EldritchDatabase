@@ -1,5 +1,7 @@
 "use client";
+
 import React, { useState } from "react";
+import ResearcherService from "../services/researcherService";
 
 // https://www.formbackend.com/nextjs-form
 export default function NewResearcherForm() {
@@ -13,55 +15,24 @@ export default function NewResearcherForm() {
         }));
     }
 
-    const [formData, setFormData] = useState({
+    const blankFormData = {
         name: "",
         category: "",
         description: "",
-        datetime: null,
-    });
+    }
+    const [formData, setFormData] = useState(blankFormData);
 
-    const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
-        // We don't want the page to refresh
-        e.preventDefault()
+    const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
-        const formURL = e.currentTarget.action;
-        const data = new FormData();
-
-        // Turn our formData state into data we can use with a form submission
-        Object.entries(formData).forEach(([key, value]) => {
-            data.append(key, value);
-        })
-
-        // POST the data to the URL of the form
-        fetch(formURL, {
-            method: "POST",
-            body: data,
-            headers: {
-                'accept': 'application/json',
-            },
-        }).then(() => {
-            setFormData({
-                name: "",
-                category: "",
-                description: ""
-            })
-        })
-
-        console.log("creation of researcher");
-        review.reviewerId = authUser.user.user._id;
-        review.itemId = dataObject.item._id;
-        review.rating = Number(review.rating);
-
-        await ReviewService.postReview(review, reservationId).then((res) => {
+        await ResearcherService.createNew(formData).then((res) => {
             if (res.success) {
                 alert("Review successfully posted!");
-                setReview(blankReview);
             }
             else {
                 alert("Sorry, an error occured.");
             }
         });
-    }
     }
 
     return (
@@ -77,8 +48,8 @@ export default function NewResearcherForm() {
                 <div>
                     <p>Category</p>
                     <br />
-                    <input type="radio" id="html" name="category" value="HTML" /> <label htmlFor="html">Human</label><br />
-                    <input type="radio" id="css" name="category" value="CSS" /> <label htmlFor="css">Manufactured</label><br />
+                    <input type="radio" id="human" name="category" value="Human" onChange={handleInput} /> <label htmlFor="human">Human</label><br />
+                    <input type="radio" id="manufactured" name="category" value="Manufactured" onChange={handleInput} /> <label htmlFor="manufactured">Manufactured</label><br />
                 </div>
 
                 <div>
