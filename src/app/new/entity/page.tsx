@@ -17,7 +17,7 @@ export default function NewEntityForm() {
 
     const blankFormData = {
         name: "",
-        category: "",
+        origin: "",
         description: "",
     }
     const [formData, setFormData] = useState(blankFormData);
@@ -27,7 +27,8 @@ export default function NewEntityForm() {
 
         await DataService.createNew(formData, DataService.DataType.ENTITY).then((res) => {
             if (res.success) {
-                alert("Review successfully posted!");
+                alert("Successfully posted!");
+                setFormData(blankFormData);
             }
             else {
                 alert("Sorry, an error occured.");
@@ -43,6 +44,13 @@ export default function NewEntityForm() {
                     <label>Name</label>
                     <br />
                     <input type="text" name="name" onChange={handleInput} />
+                </div>
+
+                <div>
+                    <p>Origin</p>
+                    <br />
+                    <input type="radio" id="planar" name="nature" value="Planar" onChange={handleInput} /> <label htmlFor="planar">Planar</label><br />
+                    <input type="radio" id="extraplanar" name="nature" value="Extraplanar" onChange={handleInput} /> <label htmlFor="extraplanar">Extraplanar</label><br />
                 </div>
 
                 <div>

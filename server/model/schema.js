@@ -33,9 +33,9 @@ const ArtifactSchema = new Schema({
     type: String,
     required: true
   },
-  origin: {
+  nature: {
     type: String,
-    enum: ['Planar', 'Extraplanar'],
+    enum: ['Physical', 'Digital'],
     required: true
   },
   description: {
@@ -52,6 +52,11 @@ const ArtifactModel = mongoose.model("Artifact", ArtifactSchema);
 const EntitySchema = new Schema({
   name: {
     type: String,
+    required: true
+  },
+  origin: {
+    type: String,
+    enum: ['Planar', 'Extraplanar'],
     required: true
   },
   description: {

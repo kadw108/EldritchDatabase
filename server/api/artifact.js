@@ -10,7 +10,7 @@ router.post("/new", async (req, res) => {
         // Get the incoming data in the Mongoose-defined schema format.
         const newObject = new ArtifactModel({
             name: req.body.name,
-            origin: req.body.origin,
+            nature: req.body.nature,
             description: req.body.description,
             creation_datetime: new Date(Date.now()),
         });

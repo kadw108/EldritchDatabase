@@ -27,7 +27,8 @@ export default function NewResearcherForm() {
 
         await DataService.createNew(formData, DataService.DataType.RESEARCHER).then((res) => {
             if (res.success) {
-                alert("Review successfully posted!");
+                alert("Successfully posted!");
+                setFormData(blankFormData);
             }
             else {
                 alert("Sorry, an error occured.");

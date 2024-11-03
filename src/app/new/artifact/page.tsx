@@ -17,7 +17,7 @@ export default function NewArtifactForm() {
 
     const blankFormData = {
         name: "",
-        category: "",
+        nature: "",
         description: "",
     }
     const [formData, setFormData] = useState(blankFormData);
@@ -27,7 +27,8 @@ export default function NewArtifactForm() {
 
         await DataService.createNew(formData, DataService.DataType.ARTIFACT).then((res) => {
             if (res.success) {
-                alert("Review successfully posted!");
+                alert("Successfully posted!");
+                setFormData(blankFormData);
             }
             else {
                 alert("Sorry, an error occured.");
@@ -46,10 +47,10 @@ export default function NewArtifactForm() {
                 </div>
 
                 <div>
-                    <p>Origin</p>
+                    <p>Nature</p>
                     <br />
-                    <input type="radio" id="planar" name="category" value="Planar" onChange={handleInput} /> <label htmlFor="planar">Planar</label><br />
-                    <input type="radio" id="extraplanar" name="category" value="Extraplanar" onChange={handleInput} /> <label htmlFor="extraplanar">Extraplanar</label><br />
+                    <input type="radio" id="physical" name="nature" value="Physical" onChange={handleInput} /> <label htmlFor="physical">Physical</label><br />
+                    <input type="radio" id="digital" name="nature" value="Digital" onChange={handleInput} /> <label htmlFor="digital">Digital</label><br />
                 </div>
 
                 <div>
