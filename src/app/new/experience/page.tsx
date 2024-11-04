@@ -2,6 +2,7 @@
 
 import React, { FormEvent, useState } from "react";
 import DataService from "../../services/dataService";
+import ExperienceService from "../../services/experienceService";
 import Category from "@/app/category";
 
 import Loading from "../../browse/loading";
@@ -84,7 +85,7 @@ export default function NewExperienceForm() {
     const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        await DataService.createNew(formData, Category.EXPERIENCE).then((res) => {
+        await ExperienceService.createNew(formData).then((res) => {
             if (res.success) {
                 alert("Successfully posted!");
                 setFormData(blankFormData);

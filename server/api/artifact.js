@@ -36,9 +36,9 @@ router.get("/get_all", async (req, res) => {
     }
 });
 
-router.post("/get/:id", async (req, res) => {
+router.get("/get/:id", async (req, res) => {
     try {
-        const result = ArtifactModel.findById(req.params.id);
+        const result = await ArtifactModel.findById(req.params.id);
         res.status(201).json({ success: true, data: result });
     } catch (err) {
         res.status(400).json({ success: false, data: err.message });

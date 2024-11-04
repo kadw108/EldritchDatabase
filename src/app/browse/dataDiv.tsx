@@ -13,9 +13,17 @@ export default function DataDiv({data, category}: any) {
         categoryInfo = <p><small>{data.nature}</small></p>;
     }
 
+    let title;
+    if (category != Category.EXPERIENCE) {
+        title = <h3>{data.name}</h3>;
+    }
+    else {
+        title = <h3><a href={"/experience/" + data._id}>{data.name}</a></h3>;
+    }
+
     return (
         <div className={styles.dataDiv}>
-            <h3>{data.name}</h3>
+            {title}
             {categoryInfo} 
             <p>{data.description}</p>
         </div>

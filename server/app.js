@@ -19,6 +19,7 @@ app.use("/api/researcher", researcher);
 
 app.use("/api/entity", require("./api/entity").router);
 app.use("/api/artifact", require("./api/artifact").router);
+app.use("/api/experience", require("./api/experience").router);
 
 app.listen(PORT, () => {
     console.log("Server running on port " + PORT + ".");

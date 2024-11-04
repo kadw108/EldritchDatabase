@@ -75,9 +75,16 @@ const ExperienceSchema = new Schema({
     type: String,
     required: true
   },
-  origin: {
-    type: String,
-    enum: ['Planar', 'Extraplanar'],
+  researchers: {
+    type: [Schema.Types.ObjectId],
+    required: true
+  },
+  artifacts: {
+    type: [Schema.Types.ObjectId],
+    required: true
+  },
+  entities: {
+    type: [Schema.Types.ObjectId],
     required: true
   },
   description: {
@@ -89,6 +96,6 @@ const ExperienceSchema = new Schema({
     required: true
   }
 });
-const ExperienceModel = mongoose.model("Entity", EntitySchema);
+const ExperienceModel = mongoose.model("Experience", ExperienceSchema);
 
 module.exports = {ResearcherModel, ArtifactModel, EntityModel, ExperienceModel};

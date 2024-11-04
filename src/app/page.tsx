@@ -3,6 +3,7 @@ import Image from "next/image";
 import AllResearchers from "./browse/allResearchers";
 import AllEntities from "./browse/allEntities";
 import AllArtifacts from "./browse/allArtifacts";
+import AllExperiences from "./browse/allExperiences";
 
 export default function Home() {
   return (
@@ -21,6 +22,7 @@ export default function Home() {
     <AllResearchers/>
     <AllEntities/>
     <AllArtifacts/>
+    <AllExperiences/>
 
     </main>
   );

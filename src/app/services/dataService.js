@@ -1,7 +1,14 @@
+import Category from "../category";
+
 const SERVER_URL = "http://localhost:8888/api";
 
 class DataService {
     static async createNew(data, category) {
+        if (category == Category.EXPERIENCE) {
+            console.error("Do not call DataService.createNew to create a new Experience. Use ExperienceService.createNew.");
+            return;
+        }
+
         console.log("Creation of object.");
         console.log(JSON.stringify(data));
 
