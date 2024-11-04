@@ -7,10 +7,15 @@ import Category from "../../category";
 import Loading from "../../browse/loading";
 import DataDiv from "@/app/browse/dataDiv";
 
+import { useRouter } from "next/navigation";
+
 export default function AllResearchers(
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const router = useRouter();
+
     const blankExperience = {
+        _id: "",
         name: "",
         researchers: [] as Array<string>,
         artifacts: [] as Array<string>,
@@ -31,7 +36,7 @@ export default function AllResearchers(
         getData();
     }, []);
 
-    const GenerateList = ({category}: any) => {
+    const GenerateList = ({ category }: any) => {
         const [allResults, setAllResults] = React.useState([]);
         const [isLoading, setIsLoading] = React.useState(true);
 
@@ -53,25 +58,38 @@ export default function AllResearchers(
                     const fetchedData = await DataService.getOne(category, id);
                     results.push(fetchedData.data);
                 }
-                console.log("RESULTS " + results.length + results[0].name);
                 setAllResults(results);
                 setIsLoading(false);
             }
             getData();
         }, []);
 
-        let resultsList = 
+        let resultsList =
             <div>
                 <div>
-                {allResults.map((info: any) => (
-                    <DataDiv key={info._id} data={info} category={category}/>
-                ))}
+                    {allResults.map((info: any) => (
+                        <DataDiv key={info._id} data={info} category={category} />
+                    ))}
                 </div>
             </div>;
         if (allResults.length == 0) {
             resultsList = <p><em>None yet.</em></p>;
         }
         return resultsList;
+    }
+
+    const deleteObject = () => {
+        async function deleteRequest() {
+            const deleteResult = await DataService.deleteOne(Category.EXPERIENCE, data._id);
+            if (deleteResult.success) {
+                alert("Deletion successful.");
+                router.push("/");
+            }
+            else {
+                alert("Deletion failed. Sorry.");
+            }
+        }
+        deleteRequest();
     }
 
     let content;
@@ -83,20 +101,23 @@ export default function AllResearchers(
             <div>
                 <h3>Title: {data.name}</h3>
 
-                <hr/>
+                <a href={"/experience/" + data._id + "/edit"}><button type="button">Edit</button></a>
+                <br/>
+                <button type="button" onClick={deleteObject}>Delete</button>
+                <hr />
 
                 <h3>Filed by Researcher:</h3>
-                <GenerateList category={Category.RESEARCHER}/>
+                <GenerateList category={Category.RESEARCHER} />
 
-                <hr/>
+                <hr />
 
                 <h3>Associated Artifacts</h3>
-                <GenerateList category={Category.ARTIFACT}/>
+                <GenerateList category={Category.ARTIFACT} />
 
                 <h3>Associated Entities</h3>
-                <GenerateList category={Category.ENTITY}/>
+                <GenerateList category={Category.ENTITY} />
 
-                <hr/>
+                <hr />
 
                 <h3>Description</h3>
                 <p>{data.description}</p>

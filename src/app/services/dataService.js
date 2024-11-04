@@ -62,6 +62,23 @@ class DataService {
                 });
         });
     }
+
+    static async deleteOne(category, id) {
+        return new Promise((resolve, reject) => {
+            fetch(`${SERVER_URL}/${category.string}/delete/${id}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+            })
+                .then((res) => res.json())
+                .then((res) => {
+                    // const data = res.data;
+                    resolve(res);
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
+    }
 }
 
 export default DataService;

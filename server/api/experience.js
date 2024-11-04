@@ -47,4 +47,13 @@ router.get("/get/:id", async (req, res) => {
     }
 });
 
+router.delete("/delete/:id", async (req, res) => {
+    try {
+        await ExperienceModel.deleteOne({_id: req.params.id});
+        res.status(201).json({ success: true, data: "Experience deleted." });
+    } catch (err) {
+        res.status(400).json({ success: false, data: err.message });
+    }
+});
+
 module.exports = {router};
