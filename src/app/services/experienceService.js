@@ -30,8 +30,10 @@ class ExperienceService {
         console.log("Editing an experience.");
         console.log(JSON.stringify(data));
 
+        const id = data._id;
+
         return new Promise((resolve, reject) => {
-            fetch(`${SERVER_URL}/${category.string}/edit/${id}`, {
+            fetch(`${SERVER_URL}/experience/edit/${id}`, {
                 method: "PUT",
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify(data),

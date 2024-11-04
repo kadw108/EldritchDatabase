@@ -15,7 +15,10 @@ import ExperienceService from "@/app/services/experienceService";
 export default function EditExperienceForm(
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const router = useRouter();
+
     const blankFormData = {
+        _id: "",
         name: "",
         researchers: [] as Array<string>,
         artifacts: [] as Array<string>,
@@ -104,11 +107,10 @@ export default function EditExperienceForm(
     const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        await ExperienceService.createNew(formData).then((res) => {
+        await ExperienceService.editOne(formData).then((res) => {
             if (res.success) {
-                alert("Successfully posted!");
-                setFormData(blankFormData);
-                document.querySelectorAll('input[type="radio"]').forEach((i) => (i as HTMLInputElement).checked = false);
+                alert("Successfully edited!");
+                router.push("/experience/" + formData._id);
             }
             else {
                 alert("Sorry, an error occured.");

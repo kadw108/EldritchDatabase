@@ -56,4 +56,22 @@ router.delete("/delete/:id", async (req, res) => {
     }
 });
 
+router.put("/edit/:id", async (req, res) => {
+    try {
+        const newObject = {
+            name: req.body.name,
+            researchers: req.body.researchers,
+            artifacts: req.body.artifacts,
+            entities: req.body.entities,
+            description: req.body.description,
+        };
+        console.log("EDITED OBJECT: " + newObject);
+
+        const result = await ExperienceModel.findOneAndUpdate({_id: req.params.id}, newObject, {new: true});
+        res.status(201).json({ success: true, data: result });
+    } catch (err) {
+        res.status(400).json({ success: false, data: err.message });
+    }
+});
+
 module.exports = {router};
