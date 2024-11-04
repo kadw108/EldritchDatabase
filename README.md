@@ -37,4 +37,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## Notes
 
-server folder stores the server that mediates communication between the client (src/app) and the database (MongoDB Atlas cloud database accessible from their website).
+server folder stores the server that mediates communication between the frontend (src/app) and the database (MongoDB Atlas cloud database accessible from their website).
