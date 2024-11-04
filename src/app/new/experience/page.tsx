@@ -13,6 +13,8 @@ export default function NewExperienceForm() {
     const blankFormData = {
         name: "",
         researchers: [] as Array<string>,
+        artifacts: [] as Array<string>,
+        entities: [] as Array<string>,
         description: "",
     }
     const [formData, setFormData] = useState(blankFormData);
@@ -28,27 +30,27 @@ export default function NewExperienceForm() {
         }));
     }
 
-    function ResearcherEntry({data}: any) {
+    function SelectedEntry({data, category}: any) {
         return <li>
-            {data.name}
+            <button type="button" value={data._id} onClick={removeObject(category)}>Remove</button>
+            <label> {data.name}</label>
         </li>;
     }
-
-    function PopupResult({data}: any) {
+    function PopupResult({data, category}: any) {
         return <div className={styles.result}>
-            <button type="button" value={data._id} onClick={addResearcher}>Select</button>
+            <button type="button" value={JSON.stringify(data)} onClick={addObject(category)}>Select</button>
             <label> {data.name}</label>
         </div>
     }
 
-    function ResearcherPopup() {
+    function Popup({category}: any) {
         const [allResults, setAllResults] = React.useState([]);
         const [isLoading, setIsLoading] = React.useState(true);
 
         React.useEffect(() => {
             async function getData() {
                 // load items from database
-                const serviceInfo = await DataService.getAll(Category.RESEARCHER);
+                const serviceInfo = await DataService.getAll(category);
                 setAllResults(serviceInfo.data);
                 setIsLoading(false);
             }
@@ -58,13 +60,13 @@ export default function NewExperienceForm() {
         let content = 
             <div>
                 {allResults.map((info: any) => (
-                    <PopupResult key={info._id} data={info}/>
+                    <PopupResult key={info._id} data={info} category={category}/>
                 ))}
             </div>;
         if (allResults.length == 0) {
             content = 
                 <div>
-                    <p>There are no researchers.</p>
+                    <p>There are none available.</p>
                 </div>;
         }
         if (isLoading) {
@@ -74,7 +76,7 @@ export default function NewExperienceForm() {
         return (
             <div className={styles.popup + " " + styles.absoluteAlign}>
                 <button type="button" className={styles.closeButton} onClick={hidePopups}>X</button>
-                <h3>Researchers</h3>
+                <h3>{(category.string + "s")}</h3>
                 {content}
             </div>
         );
@@ -82,7 +84,7 @@ export default function NewExperienceForm() {
     const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        await DataService.createNew(formData, Category.RESEARCHER).then((res) => {
+        await DataService.createNew(formData, Category.EXPERIENCE).then((res) => {
             if (res.success) {
                 alert("Successfully posted!");
                 setFormData(blankFormData);
@@ -95,7 +97,15 @@ export default function NewExperienceForm() {
     }
 
     const showResearchers = () => {
-        setPopups(<ResearcherPopup/>);
+        setPopups(<Popup category={Category.RESEARCHER}/>);
+        document.getElementById(styles.screenCover)?.classList.remove("hidden");
+    };
+    const showArtifacts = () => {
+        setPopups(<Popup category={Category.ARTIFACT}/>);
+        document.getElementById(styles.screenCover)?.classList.remove("hidden");
+    };
+    const showEntities = () => {
+        setPopups(<Popup category={Category.ENTITY}/>);
         document.getElementById(styles.screenCover)?.classList.remove("hidden");
     };
     const hidePopups = () => {
@@ -103,25 +113,92 @@ export default function NewExperienceForm() {
         document.getElementById(styles.screenCover)?.classList.add("hidden");
     }
 
-    const addResearcher = (e: FormEvent<HTMLButtonElement>) => {
-        const new_id = e.currentTarget.value;
-        setFormData((prevState) => ({
-            ...prevState,
-            researchers: [...formData.researchers, new_id]
-        }));
-        hidePopups();
+    const addObject = function(category: any) {
+        if (category == Category.RESEARCHER) {
+            return (e: FormEvent<HTMLButtonElement>) => {
+                const newData = JSON.parse(e.currentTarget.value);
+                setFormData((prevState) => ({
+                    ...prevState,
+                    researchers: [...formData.researchers, newData]
+                }));
+                hidePopups();
+            }
+        }
+        else if (category == Category.ARTIFACT) {
+            return (e: FormEvent<HTMLButtonElement>) => {
+                const newData = JSON.parse(e.currentTarget.value);
+                setFormData((prevState) => ({
+                    ...prevState,
+                    artifacts: [...formData.artifacts, newData]
+                }));
+                hidePopups();
+            }
+        }
+        else if (category == Category.ENTITY) {
+            return (e: FormEvent<HTMLButtonElement>) => {
+                const newData = JSON.parse(e.currentTarget.value);
+                setFormData((prevState) => ({
+                    ...prevState,
+                    entities: [...formData.entities, newData]
+                }));
+                hidePopups();
+            }
+        }
+    }
+    const removeObject = (category: any) => {
+        if (category == Category.RESEARCHER) {
+            return (e: FormEvent<HTMLButtonElement>) => {
+                const id = e.currentTarget.value;
+                setFormData((prevState) => ({
+                    ...prevState,
+                    researchers: formData.researchers.filter((i: any) => i._id != id)
+                }));
+            }
+        }
+        else if (category == Category.ARTIFACT) {
+            return (e: FormEvent<HTMLButtonElement>) => {
+                const id = e.currentTarget.value;
+                setFormData((prevState) => ({
+                    ...prevState,
+                    artifacts: formData.artifacts.filter((i: any) => i._id != id)
+                }));
+            }
+        }
+        else if (category == Category.ENTITY) {
+            return (e: FormEvent<HTMLButtonElement>) => {
+                const id = e.currentTarget.value;
+                setFormData((prevState) => ({
+                    ...prevState,
+                    entities: formData.entities.filter((i: any) => i._id != id)
+                }));
+            }
+        }
     }
 
-    let researcherInput = 
-        <div>
-            <ul>
-            {formData.researchers.map((info: any) => (
-                <ResearcherEntry key={info._id} data={info}/>
-            ))}
-            </ul>
-        </div>;
-    if (formData.researchers.length == 0) {
-        researcherInput = <p>None yet.</p>;
+    const GenerateList = ({category}: any) => {
+        let sourceList;
+        if (category == Category.RESEARCHER) {
+            sourceList = formData.researchers;
+        }
+        else if (category == Category.ARTIFACT) {
+            sourceList = formData.artifacts;
+        }
+        else {
+            sourceList = formData.entities;
+        }
+
+        let resultsList = 
+            <div>
+                <ul>
+                {sourceList.map((info: any) => (
+                    <SelectedEntry key={info._id} data={info} category={category}/>
+                ))}
+                </ul>
+            </div>;
+        if (sourceList.length == 0) {
+            resultsList = <p><em>None yet.</em></p>;
+        }
+        return resultsList;
     }
 
     return (
@@ -139,8 +216,22 @@ export default function NewExperienceForm() {
                 <div>
                     <label>Researchers Associated</label>
                     <br/>
-                    {researcherInput}
+                    <GenerateList category={Category.RESEARCHER}/>
                     <button type="button" onClick={showResearchers}>Add Researcher</button>
+                </div>
+
+                <div>
+                    <label>Artifacts Associated</label>
+                    <br/>
+                    <GenerateList category={Category.ARTIFACT}/>
+                    <button type="button" onClick={showArtifacts}>Add Artifact</button>
+                </div>
+
+                <div>
+                    <label>Entities Associated</label>
+                    <br/>
+                    <GenerateList category={Category.ENTITY}/>
+                    <button type="button" onClick={showEntities}>Add Entity</button>
                 </div>
 
                 <div>

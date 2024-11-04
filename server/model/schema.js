@@ -70,4 +70,25 @@ const EntitySchema = new Schema({
 });
 const EntityModel = mongoose.model("Entity", EntitySchema);
 
-module.exports = {ResearcherModel, ArtifactModel, EntityModel};
+const ExperienceSchema = new Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  origin: {
+    type: String,
+    enum: ['Planar', 'Extraplanar'],
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  creation_datetime: {
+    type: Date,
+    required: true
+  }
+});
+const ExperienceModel = mongoose.model("Entity", EntitySchema);
+
+module.exports = {ResearcherModel, ArtifactModel, EntityModel, ExperienceModel};
