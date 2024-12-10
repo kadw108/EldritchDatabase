@@ -5,7 +5,7 @@ import DataService from "../../services/dataService";
 import ExperienceService from "../../services/experienceService";
 import Category from "@/app/category";
 
-import Loading from "../../browse/loading";
+import Loading from "../../components/loading";
 
 import styles from "./popup.module.css";
 

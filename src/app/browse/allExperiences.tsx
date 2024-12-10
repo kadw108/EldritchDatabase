@@ -5,7 +5,7 @@ import DataService from "../services/dataService";
 import Category from "../category";
 
 import DataDiv from "./dataDiv";
-import Loading from "./loading";
+import Loading from "../components/loading";
 
 import styles from "./showAll.module.css";
 
@@ -41,7 +41,7 @@ export default function AllExperiences() {
 
     return (
         <div className={styles.sectionContainer}>
-            <h2>Experiences</h2>
+            <h2>All Experiences</h2>
             {content}
         </div>
     );

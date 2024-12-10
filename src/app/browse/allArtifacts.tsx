@@ -5,7 +5,7 @@ import DataService from "../services/dataService";
 import Category from "../category";
 
 import DataDiv from "./dataDiv";
-import Loading from "./loading";
+import Loading from "../components/loading";
 
 import styles from "./showAll.module.css";
 
@@ -41,7 +41,7 @@ export default function AllResearchers() {
 
     return (
         <div className={styles.sectionContainer}>
-            <h2>Artifacts</h2>
+            <h2>All Artifacts</h2>
             {content}
         </div>
     );

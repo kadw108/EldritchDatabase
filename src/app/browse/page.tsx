@@ -7,6 +7,8 @@ import AllExperiences from "./allExperiences";
 import DataDiv from "./dataDiv";
 import Category from "../category";
 
+import SelectItem from "../components/SelectItem";
+
 function displayResultExperiences(allResults: any) {
     let content =
         <div>
@@ -29,7 +31,13 @@ function displayResultExperiences(allResults: any) {
     );
 }
 
-export default function AllResearchers() {
+export default function BrowsePage() {
+    const defaultFilters = {
+        researchers: [] as Array<string>,
+        artifacts: [] as Array<string>,
+        entities: [] as Array<string>,
+    }
+    const [filters, setFilters] = useState(defaultFilters);
     const [searchResults, setSearchResults] = React.useState(null);
     const [searchString, setSearchString] = React.useState("");
     const searchStringInput = (e: React.FormEvent<HTMLInputElement> | React.FormEvent<HTMLTextAreaElement>) => {
@@ -65,49 +73,71 @@ export default function AllResearchers() {
                 }
             });
         } else {
+            console.log(filters);
             setSearchResults(null);
         }
     }
 
+    const getResearcherFilters = (childData: any[]) => {
+        setFilters((prevState) => ({
+            ...prevState,
+            researchers: childData
+        }));
+    }
+    const getArtifactFilters = (childData: any[]) => {
+        setFilters((prevState) => ({
+            ...prevState,
+            artifacts: childData
+        }));
+    }
+    const getEntityFilters = (childData: any[]) => {
+        setFilters((prevState) => ({
+            ...prevState,
+            entities: childData
+        }));
+    }
+
     return (
-        <div className={styles.sectionContainer}>
-            <h2>Browse Experiences</h2>
+        <div>
+            <div className={styles.sectionContainer}>
+                <h2>Browse Experiences</h2>
 
-            <form method="POST" action="" onSubmit={submitSearch}>
-                <div>
-                    <label>Filter: Associated Researchers</label>
-                    <br />
-                    <button type="button">Add Researcher</button>
-                </div>
+                <form method="POST" action="" onSubmit={submitSearch}>
+                    <div>
+                        <label>Filter: Associated Researchers</label>
+                        <br />
+                        <SelectItem category={Category.RESEARCHER} buttonText="Add Researcher" sendData={getResearcherFilters}/>
+                    </div>
 
-                <div>
-                    <label>Filter: Associated Artifacts</label>
-                    <br />
-                    <button type="button">Add Artifact</button>
-                </div>
+                    <div>
+                        <label>Filter: Associated Artifacts</label>
+                        <br />
+                        <SelectItem category={Category.ARTIFACT} buttonText="Add Artifact" sendData={getArtifactFilters}/>
+                    </div>
 
-                <div>
-                    <label>Filter: Associated Entities</label>
-                    <br />
-                    <button type="button">Add Entity</button>
-                </div>
+                    <div>
+                        <label>Filter: Associated Entities</label>
+                        <br />
+                        <SelectItem category={Category.ENTITY} buttonText="Add Entity" sendData={getEntityFilters}/>
+                    </div>
 
-                <div>
-                    <label>Search: Name/Description</label>
-                    <br />
-                    <input type="text" name="name" onChange={searchStringInput} value={searchString} />
-                    <br />
-                    Any keyword entered above will be used in the search.
-                </div>
+                    <div>
+                        <label>Search: Name/Description</label>
+                        <br />
+                        <input type="text" name="name" onChange={searchStringInput} value={searchString} />
+                        <br />
+                        Any keyword entered above will be used in the search.
+                    </div>
 
-                <button type="submit">Search Experiences</button>
-            </form>
+                    <button type="submit">Search Experiences</button>
+                </form>
 
-            <br />
-            <hr />
-            <br />
+                <br />
+                <hr />
+                <br />
 
-            {results}
+                {results}
+            </div>
         </div>
     );
 }

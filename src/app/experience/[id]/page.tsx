@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import DataService from "../../services/dataService";
 import Category from "../../category";
 
-import Loading from "../../browse/loading";
+import Loading from "../../components/loading";
 import DataDiv from "@/app/browse/dataDiv";
 
 import { useRouter } from "next/navigation";
