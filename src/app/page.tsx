@@ -17,6 +17,9 @@ export default function Home() {
     <p><a href="/new/entity">Add Entity Listing</a></p>
     <p><a href="/new/experience">Add Experience Listing</a></p>
 
+    <br/>
+    <h2><a href="/browse">Browse Experiences</a></h2>
+
     <hr/>
 
     <AllResearchers/>

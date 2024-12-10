@@ -20,7 +20,6 @@ router.post("/new", async (req, res) => {
         await newObject.save();
 
         res.status(201).json({ success: true, data: "Successfully added experience." });
-
     } catch (err) {
         // console.log(err.message);
         res.status(422).json({ success: false, data: err.message });
@@ -49,7 +48,7 @@ router.get("/get/:id", async (req, res) => {
 
 router.delete("/delete/:id", async (req, res) => {
     try {
-        await ExperienceModel.deleteOne({_id: req.params.id});
+        await ExperienceModel.deleteOne({ _id: req.params.id });
         res.status(201).json({ success: true, data: "Experience deleted." });
     } catch (err) {
         res.status(400).json({ success: false, data: err.message });
@@ -67,11 +66,35 @@ router.put("/edit/:id", async (req, res) => {
         };
         console.log("EDITED OBJECT: " + newObject);
 
-        const result = await ExperienceModel.findOneAndUpdate({_id: req.params.id}, newObject, {new: true});
+        const result = await ExperienceModel.findOneAndUpdate({ _id: req.params.id }, newObject, { new: true });
         res.status(201).json({ success: true, data: result });
     } catch (err) {
         res.status(400).json({ success: false, data: err.message });
     }
 });
 
-module.exports = {router};
+router.get("/search/:searchString", async (req, res) => {
+    try {
+        // get all experiences whose name and description match the search string
+        const result = await ExperienceModel.find({ $or: [{ name: { $regex: req.params.searchString, $options: "i" } }, { description: { $regex: req.params.searchString, $options: "i" } }] });
+
+        // ensure items are unique
+        /*
+        const flags = new Set();
+        const uniqueItems = items.filter(item => {
+            if (flags.has(item._id.toString())) {
+                return false;
+            }
+            flags.add(item._id.toString());
+            return true;
+        });
+        res.status(201).json({ success: true, data: uniqueItems });
+        */
+
+        res.status(201).json({ success: true, data: result });
+    } catch (err) {
+        res.status(404).json({ success: false, data: err.message });
+    }
+});
+
+module.exports = { router };
