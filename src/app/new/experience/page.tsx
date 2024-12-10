@@ -1,13 +1,10 @@
 "use client";
 
-import React, { FormEvent, useState } from "react";
-import DataService from "../../services/dataService";
+import React, { useState } from "react";
 import ExperienceService from "../../services/experienceService";
 import Category from "@/app/category";
-
-import Loading from "../../components/loading";
-
 import styles from "./popup.module.css";
+import SelectItem from "@/app/components/SelectItem";
 
 // https://www.formbackend.com/nextjs-form
 export default function NewExperienceForm() {
@@ -19,8 +16,6 @@ export default function NewExperienceForm() {
         description: "",
     }
     const [formData, setFormData] = useState(blankFormData);
-    const [popups, setPopups] = useState(<span></span>);
-
     const handleInput = (e: React.FormEvent<HTMLInputElement> | React.FormEvent<HTMLTextAreaElement>) => {
         const fieldName = e.currentTarget.name;
         const fieldValue = e.currentTarget.value;
@@ -31,57 +26,6 @@ export default function NewExperienceForm() {
         }));
     }
 
-    function SelectedEntry({data, category}: any) {
-        return <li>
-            <button type="button" value={data._id} onClick={removeObject(category)}>Remove</button>
-            <label> {data.name}</label>
-        </li>;
-    }
-    function PopupResult({data, category}: any) {
-        return <div className={styles.result}>
-            <button type="button" value={JSON.stringify(data)} onClick={addObject(category)}>Select</button>
-            <label> {data.name}</label>
-        </div>
-    }
-
-    function Popup({category}: any) {
-        const [allResults, setAllResults] = React.useState([]);
-        const [isLoading, setIsLoading] = React.useState(true);
-
-        React.useEffect(() => {
-            async function getData() {
-                // load items from database
-                const serviceInfo = await DataService.getAll(category);
-                setAllResults(serviceInfo.data);
-                setIsLoading(false);
-            }
-            getData();
-        }, []);
-
-        let content = 
-            <div>
-                {allResults.map((info: any) => (
-                    <PopupResult key={info._id} data={info} category={category}/>
-                ))}
-            </div>;
-        if (allResults.length == 0) {
-            content = 
-                <div>
-                    <p>There are none available.</p>
-                </div>;
-        }
-        if (isLoading) {
-            content = <Loading/>;
-        }
-
-        return (
-            <div className={styles.popup + " " + styles.absoluteAlign}>
-                <button type="button" className={styles.closeButton} onClick={hidePopups}>X</button>
-                <h3>{(category.string + "s")}</h3>
-                {content}
-            </div>
-        );
-    }
     const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -97,114 +41,27 @@ export default function NewExperienceForm() {
         });
     }
 
-    const showResearchers = () => {
-        setPopups(<Popup category={Category.RESEARCHER}/>);
-        document.getElementById(styles.screenCover)?.classList.remove("hidden");
-    };
-    const showArtifacts = () => {
-        setPopups(<Popup category={Category.ARTIFACT}/>);
-        document.getElementById(styles.screenCover)?.classList.remove("hidden");
-    };
-    const showEntities = () => {
-        setPopups(<Popup category={Category.ENTITY}/>);
-        document.getElementById(styles.screenCover)?.classList.remove("hidden");
-    };
-    const hidePopups = () => {
-        setPopups(<span></span>);
-        document.getElementById(styles.screenCover)?.classList.add("hidden");
+    const getResearchers = (newData: any[]) => {
+        setFormData((prevState) => ({
+            ...prevState,
+            researchers: newData
+        }));
     }
-
-    const addObject = function(category: any) {
-        if (category == Category.RESEARCHER) {
-            return (e: FormEvent<HTMLButtonElement>) => {
-                const newData = JSON.parse(e.currentTarget.value);
-                setFormData((prevState) => ({
-                    ...prevState,
-                    researchers: [...formData.researchers, newData]
-                }));
-                hidePopups();
-            }
-        }
-        else if (category == Category.ARTIFACT) {
-            return (e: FormEvent<HTMLButtonElement>) => {
-                const newData = JSON.parse(e.currentTarget.value);
-                setFormData((prevState) => ({
-                    ...prevState,
-                    artifacts: [...formData.artifacts, newData]
-                }));
-                hidePopups();
-            }
-        }
-        else if (category == Category.ENTITY) {
-            return (e: FormEvent<HTMLButtonElement>) => {
-                const newData = JSON.parse(e.currentTarget.value);
-                setFormData((prevState) => ({
-                    ...prevState,
-                    entities: [...formData.entities, newData]
-                }));
-                hidePopups();
-            }
-        }
+    const getArtifacts = (newData: any[]) => {
+        setFormData((prevState) => ({
+            ...prevState,
+            artifacts: newData
+        }));
     }
-    const removeObject = (category: any) => {
-        if (category == Category.RESEARCHER) {
-            return (e: FormEvent<HTMLButtonElement>) => {
-                const id = e.currentTarget.value;
-                setFormData((prevState) => ({
-                    ...prevState,
-                    researchers: formData.researchers.filter((i: any) => i._id != id)
-                }));
-            }
-        }
-        else if (category == Category.ARTIFACT) {
-            return (e: FormEvent<HTMLButtonElement>) => {
-                const id = e.currentTarget.value;
-                setFormData((prevState) => ({
-                    ...prevState,
-                    artifacts: formData.artifacts.filter((i: any) => i._id != id)
-                }));
-            }
-        }
-        else if (category == Category.ENTITY) {
-            return (e: FormEvent<HTMLButtonElement>) => {
-                const id = e.currentTarget.value;
-                setFormData((prevState) => ({
-                    ...prevState,
-                    entities: formData.entities.filter((i: any) => i._id != id)
-                }));
-            }
-        }
-    }
-
-    const GenerateList = ({category}: any) => {
-        let sourceList;
-        if (category == Category.RESEARCHER) {
-            sourceList = formData.researchers;
-        }
-        else if (category == Category.ARTIFACT) {
-            sourceList = formData.artifacts;
-        }
-        else {
-            sourceList = formData.entities;
-        }
-
-        let resultsList = 
-            <div>
-                <ul>
-                {sourceList.map((info: any) => (
-                    <SelectedEntry key={info._id} data={info} category={category}/>
-                ))}
-                </ul>
-            </div>;
-        if (sourceList.length == 0) {
-            resultsList = <p><em>None yet.</em></p>;
-        }
-        return resultsList;
+    const getEntities = (newData: any[]) => {
+        setFormData((prevState) => ({
+            ...prevState,
+            entities: newData
+        }));
     }
 
     return (
         <div>
-            {popups}
             <div id={styles.screenCover} className={styles.absoluteAlign + " hidden"}></div>
             <h2>File a New Experience</h2>
             <form method="POST" action="" onSubmit={submitForm}>
@@ -217,22 +74,19 @@ export default function NewExperienceForm() {
                 <div>
                     <label>Researchers Associated</label>
                     <br/>
-                    <GenerateList category={Category.RESEARCHER}/>
-                    <button type="button" onClick={showResearchers}>Add Researcher</button>
+                    <SelectItem category={Category.RESEARCHER} buttonText="Add Researcher" sendData={getResearchers}/>
                 </div>
 
                 <div>
                     <label>Artifacts Associated</label>
                     <br/>
-                    <GenerateList category={Category.ARTIFACT}/>
-                    <button type="button" onClick={showArtifacts}>Add Artifact</button>
+                    <SelectItem category={Category.ARTIFACT} buttonText="Add Artifact" sendData={getArtifacts}/>
                 </div>
 
                 <div>
                     <label>Entities Associated</label>
                     <br/>
-                    <GenerateList category={Category.ENTITY}/>
-                    <button type="button" onClick={showEntities}>Add Entity</button>
+                    <SelectItem category={Category.ENTITY} buttonText="Add Entity" sendData={getEntities}/>
                 </div>
 
                 <div>
