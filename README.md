@@ -14,13 +14,15 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. It will live update.
 
 ## Server
 
 server folder stores the server that mediates communication between the client (src/app) and the database (MongoDB Atlas cloud database accessible from their website).
 
 Go into the `server` folder and run `node app.js`.
+
+YOU WILL HAVE TO QUIT AND RERUN EVERY TIME YOU MAKE CHANGES TO THE SERVER!
 
 ## Database
 

@@ -1,13 +1,16 @@
 const SERVER_URL = "http://localhost:8888/api";
 
 class ExperienceService {
-    static async createNew(data) {
-        console.log("Creation of object.");
-
+    static getIds(data) {
         data.artifacts = data.artifacts.map((data) => data._id);
         data.researchers = data.researchers.map((data) => data._id);
         data.entities = data.entities.map((data) => data._id);
+        return data;
+    }
 
+    static async createNew(data) {
+        console.log("Creation of object.");
+        data = this.getIds(data);
         console.log(JSON.stringify(data));
 
         return new Promise((resolve, reject) => {
@@ -48,12 +51,26 @@ class ExperienceService {
         });
     }
 
-    static async search(searchString) {
+    /*
+     * data: 3 arrays of researchers, artifacts, entities
+    */
+    static async search(searchString, filters) {
+        filters = this.getIds(filters);
         return new Promise((resolve, reject) => {
-            fetch(`${SERVER_URL}/experience/search/${searchString}`, {
-                method: "get",
-                headers: { "Content-Type": "application/json" },
-            })
+
+            // use search query with JS fetch API, see https://stackoverflow.com/a/58437909
+            fetch(
+                    `${SERVER_URL}/experience/search?` + new URLSearchParams({
+                    s: searchString,
+                    r: filters.researchers,
+                    a: filters.artifacts,
+                    e: filters.entities,
+                }).toString(), 
+                {
+                    method: "get",
+                    headers: { "Content-Type": "application/json" },
+                }
+            )
                 .then((res) => res.json())
                 .then((res) => {
                     resolve(res);

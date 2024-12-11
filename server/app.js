@@ -1,3 +1,4 @@
+const { queryParser } = require("express-query-parser");
 const express = require("express");
 // const cors = require("cors");
 // const http = require("http");
@@ -7,6 +8,16 @@ const PORT = 8888;
 
 // middleware
 // app.use(cors());
+
+// to parse url queries like ?q=a
+app.use(
+    queryParser({
+        parseNull: true,
+        parseUndefined: true,
+        parseBoolean: true,
+        parseNumber: true,
+    })
+);
 
 /*
 app.use(express.urlencoded({ extended: false, limit: "50mb" })); // parse form data

@@ -59,12 +59,16 @@ export default function BrowsePage() {
         e.preventDefault();
 
         let performSearch = false;
-        if (searchString != "") {
+        if ((searchString != "") ||
+            (filters.researchers.length > 0) ||
+            (filters.artifacts.length > 0) ||
+            (filters.entities.length > 0)
+        ) {
             performSearch = true;
         }
 
         if (performSearch) {
-            await ExperienceService.search(searchString).then((res) => {
+            await ExperienceService.search(searchString, filters).then((res) => {
                 if (res.success) {
                     setSearchResults(res.data);
                 }
@@ -73,7 +77,6 @@ export default function BrowsePage() {
                 }
             });
         } else {
-            console.log(filters);
             setSearchResults(null);
         }
     }

@@ -73,24 +73,41 @@ router.put("/edit/:id", async (req, res) => {
     }
 });
 
-router.get("/search/:searchString", async (req, res) => {
+router.get("/search", async (req, res) => {
     try {
+        console.log("SEARCH: " + req.query.s, req.query.r, req.query.a, req.query.e);
+        const searchString = req.query.s;
+        const researchers = req.query.r;
+        const artifacts = req.query.a;
+        const entities = req.query.e;
+
+        let query = [];
+
         // get all experiences whose name and description match the search string
-        const result = await ExperienceModel.find({ $or: [{ name: { $regex: req.params.searchString, $options: "i" } }, { description: { $regex: req.params.searchString, $options: "i" } }] });
+        if (searchString != "") {
+            query.push({$or: [
+                { name: { $regex: searchString, $options: "i" } },
+                { description: { $regex: searchString, $options: "i" } }
+            ]});
+        }
+        // get only experiences with specified researchers/artifacts/entities in search filters
+        if (researchers.length > 0) {
+            query.push({
+                researchers: { $all : researchers }
+            });
+        }
+        if (artifacts.length > 0) {
+            query.push({
+                artifacts: { $all : artifacts }
+            });
+        }
+        if (entities.length > 0) {
+            query.push({
+                entities: { $all : entities }
+            });
+        }
 
-        // ensure items are unique
-        /*
-        const flags = new Set();
-        const uniqueItems = items.filter(item => {
-            if (flags.has(item._id.toString())) {
-                return false;
-            }
-            flags.add(item._id.toString());
-            return true;
-        });
-        res.status(201).json({ success: true, data: uniqueItems });
-        */
-
+        const result = await ExperienceModel.find(...query);
         res.status(201).json({ success: true, data: result });
     } catch (err) {
         res.status(404).json({ success: false, data: err.message });
