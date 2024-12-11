@@ -75,11 +75,11 @@ router.put("/edit/:id", async (req, res) => {
 
 router.get("/search", async (req, res) => {
     try {
-        console.log("SEARCH: " + req.query.s, req.query.r, req.query.a, req.query.e);
         const searchString = req.query.s;
-        const researchers = req.query.r;
-        const artifacts = req.query.a;
-        const entities = req.query.e;
+        const researchers = req.query.r ? req.query.r.split(',') : [];
+        const artifacts = req.query.a ? req.query.a.split(',') : [];
+        const entities = req.query.e ? req.query.e.split(',') : [];
+        console.log("SEARCH: " + searchString, researchers, artifacts, entities);
 
         let query = [];
 
@@ -110,7 +110,7 @@ router.get("/search", async (req, res) => {
         const result = await ExperienceModel.find(...query);
         res.status(201).json({ success: true, data: result });
     } catch (err) {
-        res.status(404).json({ success: false, data: err.message });
+        res.status(400).json({ success: false, data: err.message });
     }
 });
 
