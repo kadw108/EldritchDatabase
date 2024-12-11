@@ -146,16 +146,26 @@ router.get("/search", async (req, res) => {
                 latest: {$max: "$creation_datetime"},
                 earliestResearcher: { $min: "$r.creation_datetime"},
                 latestResearcher: {$max: "$r.creation_datetime"},
-                countHuman: {$sum: {
-                  $cond: [{ $eq: ["$r.category", "Human"] }, 1, 0]
-                }},
-                count: {$count: {}},
-                researcherNames: {$push: "$r.name"}
+                researchers: {$push: "$r"}
             }}, 
+            {$set: {
+                researchers: {$setUnion: ["$researchers", "$researchers"]}
+                // remove duplicates in researchers
+            }},
+            {$set: {
+                researcherNames: "$researchers.name",
+                countHuman: {$size: {
+                    $filter: {
+                      input: "$researchers",            
+                      as: "r",
+                      cond: { $eq: ["$$r.category", "Human"] }
+                    }
+                  }
+                }
+            }},
         ]);
-        aggData = aggData[0]; // results are returned as array with 1 object, we only want the object
 
-        res.status(201).json({ success: true, data: {objects: objects, aggData: aggData}});
+        res.status(201).json({ success: true, data: {objects: objects, aggData: aggData[0]}});
     } catch (err) {
         console.log(err);
         res.status(400).json({ success: false, data: err.message });

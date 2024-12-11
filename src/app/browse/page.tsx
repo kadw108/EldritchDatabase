@@ -12,18 +12,43 @@ import SelectItem from "../components/SelectItem";
 // TODO: There is a bug where searching with the same filtered researcher/artifact/entity
 // twice in a row makes it not work the second time (it becomes undefined). No idea
 // why this happens. Fix later.
+// Current theory is that it's a result of SelectItem interaction.
 
-function displayResultExperiences(allResults: any) {
-    let content =
-        <div>
-            {allResults.map((info: any) => (
-                <DataDiv key={info._id} data={info} category={Category.EXPERIENCE} />
-            ))}
-        </div>;
+function displayResultExperiences(searchResults: any) {
+    const displayDate = (dateString: string) => {
+        const parsedDate = new Date(dateString);
+        return parsedDate.toISOString().split('T')[0];
+    };
+
+    const editList = (a: string[]) => {
+        return a.sort().join(", ");
+    }
+
+    const allResults = searchResults.objects;
+    const aggData = searchResults.aggData;
+
+    let content;
     if (allResults.length == 0) {
         content =
             <div>
                 <p>Nothing yet.</p>
+            </div>;
+    }
+    else {
+        content = 
+            <div>
+                <br/>
+                <h3>Statistics</h3>
+                <p>Number of experiences: {allResults.length}</p>
+                <p>{aggData.researcherNames.length} researcher(s) involved: {editList(aggData.researcherNames)}</p>
+                <p>Percentage of human researchers: {(100 * aggData.countHuman / aggData.researcherNames.length).toFixed(0)}%</p>
+                <p>Time range of experiences: {displayDate(aggData.earliest)} - {displayDate(aggData.latest)}</p>
+
+                <br/>
+                <h3>Experiences</h3>
+                {allResults.map((info: any) => (
+                    <DataDiv key={info._id} data={info} category={Category.EXPERIENCE} />
+                ))}
             </div>;
     }
 
@@ -75,7 +100,7 @@ export default function BrowsePage() {
             await ExperienceService.search(searchString, filters).then((res) => {
                 if (res.success) {
                     console.log(res.data);
-                    setSearchResults(res.data.objects);
+                    setSearchResults(res.data);
                 }
                 else {
                     alert("Sorry, an error occured.");
