@@ -9,6 +9,10 @@ import Category from "../category";
 
 import SelectItem from "../components/SelectItem";
 
+// TODO: There is a bug where searching with the same filtered researcher/artifact/entity
+// twice in a row makes it not work the second time (it becomes undefined). No idea
+// why this happens. Fix later.
+
 function displayResultExperiences(allResults: any) {
     let content =
         <div>
@@ -70,7 +74,8 @@ export default function BrowsePage() {
         if (performSearch) {
             await ExperienceService.search(searchString, filters).then((res) => {
                 if (res.success) {
-                    setSearchResults(res.data);
+                    console.log(res.data);
+                    setSearchResults(res.data.objects);
                 }
                 else {
                     alert("Sorry, an error occured.");

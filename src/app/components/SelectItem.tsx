@@ -14,6 +14,7 @@ export default function SelectItem({ category, buttonText, sendData }: any) {
             const newData = JSON.parse(e.currentTarget.value);
             const newList = [...sourceList, newData];
             setSourceList(newList);
+            console.log("SENDING: newList");
             sendData(newList);
             hidePopup();
         }
@@ -21,6 +22,7 @@ export default function SelectItem({ category, buttonText, sendData }: any) {
         const id = e.currentTarget.value;
         const newList = sourceList.filter((i: any) => i._id != id);
         setSourceList(newList);
+            console.log("SENDING: newList");
         sendData(newList);
     }
 
@@ -86,6 +88,8 @@ export default function SelectItem({ category, buttonText, sendData }: any) {
     }
 
     const GenerateList = () => {
+        console.log("GENERATE:", category, sourceList);
+
         let resultsList =
             <div>
                 <ul>

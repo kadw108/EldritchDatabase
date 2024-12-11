@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { ExperienceModel } = require("../model/schema");
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 //create new
 router.post("/new", async (req, res) => {
@@ -74,42 +76,88 @@ router.put("/edit/:id", async (req, res) => {
 });
 
 router.get("/search", async (req, res) => {
+
+    const queryToIdArray = (queryField) => {
+        if (queryField) {
+            return queryField.split(",").map((id) => new ObjectId(id));
+        }
+        return [];
+    };
+
     try {
         const searchString = req.query.s;
-        const researchers = req.query.r ? req.query.r.split(',') : [];
-        const artifacts = req.query.a ? req.query.a.split(',') : [];
-        const entities = req.query.e ? req.query.e.split(',') : [];
-        console.log("SEARCH: " + searchString, researchers, artifacts, entities);
+        const qResearchers = queryToIdArray(req.query.r);
+        const qArtifacts = queryToIdArray(req.query.a);
+        const qEntities = queryToIdArray(req.query.e);
+        console.log("SEARCH\nstring: " + searchString + 
+            "\nresearchers: " + qResearchers + 
+            "\nartifacts: " + qArtifacts + 
+            "\nentities: " + qEntities
+        );
 
-        let query = [];
+        let query = {};
 
         // get all experiences whose name and description match the search string
         if (searchString != "") {
-            query.push({$or: [
-                { name: { $regex: searchString, $options: "i" } },
-                { description: { $regex: searchString, $options: "i" } }
-            ]});
+            query = {
+                ...query,
+                $or: [
+                    { name: { $regex: searchString, $options: "i" } },
+                    { description: { $regex: searchString, $options: "i" } }
+                ]
+            };
         }
         // get only experiences with specified researchers/artifacts/entities in search filters
-        if (researchers.length > 0) {
-            query.push({
-                researchers: { $all : researchers }
-            });
+        if (qResearchers.length > 0) {
+            query = {
+                ...query,
+                researchers: { $all : qResearchers }
+            };
         }
-        if (artifacts.length > 0) {
-            query.push({
-                artifacts: { $all : artifacts }
-            });
+        if (qArtifacts.length > 0) {
+            query = {
+                ...query,
+                artifacts: { $all : qArtifacts }
+            };
         }
-        if (entities.length > 0) {
-            query.push({
-                entities: { $all : entities }
-            });
+        if (qEntities.length > 0) {
+            query = {
+                ...query,
+                entities: { $all : qEntities }
+            }
         }
+        const objects = await ExperienceModel.find(query);
 
-        const result = await ExperienceModel.find(...query);
-        res.status(201).json({ success: true, data: result });
+        let aggData = await ExperienceModel.aggregate([
+            {$match: query},
+            {$unwind: "$researchers"},
+            {$lookup: {
+                from: "researchers",
+                localField: "researchers",
+                foreignField: "_id",
+                as: "r"
+            }},
+            {$set: {
+                r: {$first: "$r"}
+            }},
+            {$group: {
+                _id: null,
+                earliest: { $min: "$creation_datetime"},
+                latest: {$max: "$creation_datetime"},
+                earliestResearcher: { $min: "$r.creation_datetime"},
+                latestResearcher: {$max: "$r.creation_datetime"},
+                countHuman: {$sum: {
+                  $cond: [{ $eq: ["$r.category", "Human"] }, 1, 0]
+                }},
+                count: {$count: {}},
+                researcherNames: {$push: "$r.name"}
+            }}, 
+        ]);
+        aggData = aggData[0]; // results are returned as array with 1 object, we only want the object
+
+        res.status(201).json({ success: true, data: {objects: objects, aggData: aggData}});
     } catch (err) {
+        console.log(err);
         res.status(400).json({ success: false, data: err.message });
     }
 });

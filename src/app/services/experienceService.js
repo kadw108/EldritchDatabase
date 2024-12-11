@@ -55,6 +55,7 @@ class ExperienceService {
      * data: 3 arrays of researchers, artifacts, entities
     */
     static async search(searchString, filters) {
+        console.log("SEARCH\n", searchString, filters);
         filters = this.getIds(filters);
         return new Promise((resolve, reject) => {
 
