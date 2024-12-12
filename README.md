@@ -33,3 +33,7 @@ Go to https://account.mongodb.com/account/login and login with your MongoDB cred
 After logging in, make sure the IP address the server is running from has permission to access the database.
 
 The client works if the server is up and has database access.
+
+## Notes
+
+server folder stores the server that mediates communication between the frontend (src/app) and the database (MongoDB Atlas cloud database accessible from their website).
