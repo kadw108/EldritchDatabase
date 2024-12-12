@@ -3,6 +3,8 @@ const express = require("express");
 // const cors = require("cors");
 // const http = require("http");
 
+const { db, mongo } = require('./mongo') //gets mongodb db instance
+
 const app = express();
 const PORT = 8888;
 
